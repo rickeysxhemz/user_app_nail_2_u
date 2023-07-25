@@ -1,0 +1,1 @@
+[07-Feb-2022 19:48:17 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/nailbuyr/user.nail2u.net/app/Mail/ForgotPassword.php on line 6
