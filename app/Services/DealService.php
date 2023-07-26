@@ -66,7 +66,7 @@ class DealService extends BaseService
                     $data['id'] = $artist->id;
                     $data['username'] = $artist->username;
                     $data['image_url'] = $artist->absolute_image_url;
-                    $data['cover_image'] = 'https://artist.nail2u.net/'.$artist->cover_image;
+                    $data['cover_image'] =  env('COMMON_PATH').$artist->cover_image;
                     $data['ratings'] = round($artist->reviews->avg('rating'), 1);
                     $data['reviews'] = $artist->reviews;
                     
