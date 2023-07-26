@@ -30,9 +30,14 @@ class DashboardService extends BaseService
                     $q->where("name", "artist");
                 })
                 ->whereNotNull('phone_verified_at')
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                          ->from('artist_services')
+                          ->whereRaw('users.id = artist_services.artist_id');
+                })
                 ->orderby('id', 'desc')
                 ->get(['id', 'username', 'image_url', 'cv_url', 'cover_image']);
-                
+           
             if ($artists) {
                 foreach ($artists as $artist) {
                     $data['id'] = $artist->id;
