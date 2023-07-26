@@ -37,8 +37,8 @@ class DashboardService extends BaseService
                 foreach ($artists as $artist) {
                     $data['id'] = $artist->id;
                     $data['username'] = $artist->username;
-                    $data['image_url'] = 'https://artist.nail2u.net/'.$artist->image_url;
-                    $data['cover_image'] = 'https://artist.nail2u.net/'.$artist->cover_image;
+                    $data['image_url'] = env('COMMON_PATH').$artist->image_url;
+                    $data['cover_image'] =  env('COMMON_PATH').$artist->cover_image;
                     $data['ratings'] = round($artist->reviews->avg('rating'), 1);
                     $data['jobs_done'] = count($artist->jobs);
                     $status = 0;
@@ -102,8 +102,8 @@ class DashboardService extends BaseService
                     $profile = explode("https://user.nail2u.net",$artist->absolute_image_url);
                     $data['id'] = $artist->id;
                     $data['username'] = $artist->username;
-                    $data['image_url'] =  'https://artist.nail2u.net'.$profile[1];
-                    $data['cover_image'] = 'https://artist.nail2u.net/'.$artist->cover_image;
+                    $data['image_url'] =   env('COMMON_PATH').$profile[1];
+                    $data['cover_image'] =  env('COMMON_PATH').$artist->cover_image;
                     $data['ratings'] = round($artist->reviews->avg('rating'), 1);
                     $data['jobs_done'] = count($artist->jobs);
                     $data['since_join'] = date("Y", strtotime($artist->created_at));

@@ -69,8 +69,8 @@ class BookingService extends BaseService
             // $profile = explode("https://user.nail2u.net",$client->image_url);
             $data['id'] = $client->id ? $client->id : '';
             $data['username'] = $client->username ? $client->username : '';
-            $data['image_url'] =  'https://artist.nail2u.net/'.$client->image_url; 
-            $data['cover_image'] = 'https://artist.nail2u.net/'.$client->cover_image ?  'https://artist.nail2u.net/'.$client->cover_image : '';
+            $data['image_url'] =   env('COMMON_PATH').$client->image_url; 
+            $data['cover_image'] =  env('COMMON_PATH').$client->cover_image ?   env('COMMON_PATH').$client->cover_image : '';
             $data['ratings'] = round($client->reviews->avg('rating'), 2);
             $data['service'] = $bookings->BookingService ? $bookings->BookingService : '';
             $data['location'] = $client->address ? $client->address : '';

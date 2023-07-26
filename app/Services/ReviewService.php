@@ -72,7 +72,7 @@ class ReviewService extends BaseService
                     return  [
                         'overall_rating' => round($overall_rating,1),
                         'artist_name' => $user_detail[0]->username,
-                        'cover_image' => 'https://artist.nail2u.net/'.$user_detail[0]->cover_image,
+                        'cover_image' =>  env('COMMON_PATH').$user_detail[0]->cover_image,
                         'services' => $user_detail[0]->ArtistService,
                         'ratings' => $reviews
                     ];
