@@ -16,7 +16,7 @@ class DashboardService extends BaseService
 {
     public function getAllArtists()
     { 
-        // try {
+        try {
             $artist_data = [];
             $artists = User::with([
                 'reviews',
@@ -30,7 +30,6 @@ class DashboardService extends BaseService
                     $q->where("name", "artist");
                 })
                 ->whereNotNull('phone_verified_at')
-                 
                 ->whereExists(function ($query) {
                     $query->select(DB::raw(1))
                           ->from('artist_services')
@@ -74,11 +73,11 @@ class DashboardService extends BaseService
                 return $artist_data;
             }
             return GlobalApiResponseCodeBook::RECORD_NOT_EXISTS['outcomeCode'];
-        // } catch (Exception $e) {
-        //     $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
-        //     Helper::errorLogs("DashboardService: getAllArtists", $error);
-        //     return false;
-        // }
+        } catch (Exception $e) {
+            $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
+            Helper::errorLogs("DashboardService: getAllArtists", $error);
+            return false;
+        }
     }
     
     public function getArtist($id)
