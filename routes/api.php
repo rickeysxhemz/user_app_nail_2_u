@@ -116,6 +116,7 @@ Route::group(['middleware' => ['auth:api', 'role:user', 'check-user-status']], f
     });
     
     Route::prefix('favourite')->group(function () {
+        Route::get('all', [FavouriteController::class, 'all']);
         Route::post('send', [FavouriteController::class, 'create']);
         Route::post('delete', [FavouriteController::class, 'deleteFavourite']);
     });

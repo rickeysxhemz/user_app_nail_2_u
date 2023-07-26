@@ -18,6 +18,20 @@ class FavouriteController extends Controller
         $this->global_api_response = $GlobalApiResponse;
     }
 
+    public function all()
+    {
+
+        $all = $this->favourite_service->all();
+
+        if ($all === GlobalApiResponseCodeBook::RECORD_NOT_EXISTS['outcomeCode'])
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::RECORD_NOT_EXISTS, "favourite not found!", []));
+
+        if (!$all)
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "favourite failed!", $all));
+
+        return ($this->global_api_response->success(count($all), "favourite fetch successfully!", $all));
+    }
+
     public function create(CreateFavouriteRequest $request)
     {
 
