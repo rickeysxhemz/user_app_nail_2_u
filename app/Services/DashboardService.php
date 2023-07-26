@@ -54,20 +54,7 @@ class DashboardService extends BaseService
                     $data['favourite'] = $status;
                     $data['expert'] = '';
                     $data['service_price'] = DB::table('artist_services')->where('artist_id', $artist->id)->sum('price');
-                    // $artist_services = $artist->services->pluck('id')->toArray();
-
-                    // if (count($artist_services) > 0) {
-                    //     for ($i = 0; $i < count($artist->services->toArray()); $i++) {
-                    //         $verify = [];
-                    //         $count = DB::table('booking_services')->where('service_id', $artist_services[$i])->count();
-                    //         $verify[$artist_services[$i]] = $count;
-                    //         $maxs = array_keys($verify, max($verify));
-                    //     }
-
-                    //     $service = Service::find($maxs[0]);
-                    //     $data['expert'] = $service->name;
-                    //     $data['service_price'] = $service->price;
-                    // }
+                    
                     array_push($artist_data, $data);
                 }
                 return $artist_data;
