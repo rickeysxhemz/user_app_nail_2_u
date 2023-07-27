@@ -91,7 +91,7 @@ class DashboardService extends BaseService
                 // return $suggested_artists;
             if ($suggested_artists) {
                 foreach ($suggested_artists as $artist) {
-                    $profile = explode("https://user.nail2u.net",$artist->absolute_image_url);
+                    $profile = explode(env('USER_APP_PATH'),$artist->absolute_image_url);
                     $data['id'] = $artist->id;
                     $data['username'] = $artist->username;
                     $data['image_url'] =   env('COMMON_PATH').$profile[1];
