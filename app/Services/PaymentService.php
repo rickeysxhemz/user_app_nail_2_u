@@ -64,94 +64,94 @@ class PaymentService extends BaseService
     {
         try {
 
-            // $curl = curl_init();
+            $curl = curl_init();
 
-            // curl_setopt_array($curl, array(
-            // CURLOPT_URL => 'https://api.clover.com/pakms/apikey',
-            // CURLOPT_RETURNTRANSFER => true,
-            // CURLOPT_ENCODING => '',
-            // CURLOPT_MAXREDIRS => 10,
-            // CURLOPT_TIMEOUT => 0,
-            // CURLOPT_FOLLOWLOCATION => true,
-            // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            // CURLOPT_CUSTOMREQUEST => 'GET',
-            // CURLOPT_HTTPHEADER => array(
-            //     'Accept: application/json',
-            //     'Authorization: Bearer 0c6ef57c-383c-a768-f60e-dca7255ec230'
-            // ),
-            // ));
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.clover.com/pakms/apikey',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Accept: application/json',
+                'Authorization: Bearer 0c6ef57c-383c-a768-f60e-dca7255ec230'
+            ),
+            ));
 
-            // $response = json_decode(curl_exec($curl));
+            $response = json_decode(curl_exec($curl));
             
-            // curl_close($curl);
+            curl_close($curl);
 
 
-            // $curl = curl_init();
+            $curl = curl_init();
 
-            // curl_setopt_array($curl, array(
-            // CURLOPT_URL => 'https://token.clover.com/v1/tokens',
-            // CURLOPT_RETURNTRANSFER => true,
-            // CURLOPT_ENCODING => '',
-            // CURLOPT_MAXREDIRS => 10,
-            // CURLOPT_TIMEOUT => 0,
-            // CURLOPT_FOLLOWLOCATION => true,
-            // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            // CURLOPT_CUSTOMREQUEST => 'POST',
-            // CURLOPT_POSTFIELDS =>'{
-            //     "card":{
-            //         "number":"'.$request->number.'",
-            //         "exp_month":"'.$request->exp_month.'",
-            //         "exp_year":"'.$request->exp_year.'",
-            //         "cvv":"'.$request->cvv.'",
-            //         "brand":"DISCOVER"
-            //     }
-            // }',
-            // CURLOPT_HTTPHEADER => array(
-            //     'Accept: application/json',
-            //     'apikey:'.$response->apiAccessKey,
-            //     'Content-Type: application/json'
-            // ),
-            // ));
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://token.clover.com/v1/tokens',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS =>'{
+                "card":{
+                    "number":"'.$request->number.'",
+                    "exp_month":"'.$request->exp_month.'",
+                    "exp_year":"'.$request->exp_year.'",
+                    "cvv":"'.$request->cvv.'",
+                    "brand":"DISCOVER"
+                }
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'Accept: application/json',
+                'apikey:'.$response->apiAccessKey,
+                'Content-Type: application/json'
+            ),
+            ));
 
-            // $response_tokenize_card = json_decode(curl_exec($curl));
-            // if(isset($response_tokenize_card->message) && $response_tokenize_card->message){
-            //     return Helper::returnRecord(GlobalApiResponseCodeBook::INVALID_FORM_INPUTS['outcomeCode'],  $response_tokenize_card->error->message);
-            // }
+            $response_tokenize_card = json_decode(curl_exec($curl));
+            if(isset($response_tokenize_card->message) && $response_tokenize_card->message){
+                return Helper::returnRecord(GlobalApiResponseCodeBook::INVALID_FORM_INPUTS['outcomeCode'],  $response_tokenize_card->error->message);
+            }
             
-            // curl_close($curl);
+            curl_close($curl);
            
-            // $curl = curl_init();
+            $curl = curl_init();
 
-            // curl_setopt_array($curl, array(
-            // CURLOPT_URL => 'https://scl.clover.com/v1/charges',
-            // CURLOPT_RETURNTRANSFER => true,
-            // CURLOPT_ENCODING => '',
-            // CURLOPT_MAXREDIRS => 10,
-            // CURLOPT_TIMEOUT => 0,
-            // CURLOPT_FOLLOWLOCATION => true,
-            // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            // CURLOPT_CUSTOMREQUEST => 'POST',
-            // CURLOPT_POSTFIELDS =>'{
-            //     "amount":'.$request->amount * 100 .',
-            //     "currency":"usd",
-            //     "source": "'.$response_tokenize_card->id.'"
-            // }',
-            // CURLOPT_HTTPHEADER => array(
-            //     'Accept: application/json',
-            //     'Content-Type: application/json',
-            //     'Authorization: Bearer 0c6ef57c-383c-a768-f60e-dca7255ec230'
-            // ),
-            // ));
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://scl.clover.com/v1/charges',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS =>'{
+                "amount":'.$request->amount * 100 .',
+                "currency":"usd",
+                "source": "'.$response_tokenize_card->id.'"
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'Accept: application/json',
+                'Content-Type: application/json',
+                'Authorization: Bearer 0c6ef57c-383c-a768-f60e-dca7255ec230'
+            ),
+            ));
 
-            // $response_make_payment = json_decode(curl_exec($curl));
+            $response_make_payment = json_decode(curl_exec($curl));
             
-            // if(isset($response_make_payment->message) && $response_make_payment->message){
-            //     return Helper::returnRecord(GlobalApiResponseCodeBook::INVALID_FORM_INPUTS['outcomeCode'],  $response_make_payment->error->message);
-            // }
+            if(isset($response_make_payment->message) && $response_make_payment->message){
+                return Helper::returnRecord(GlobalApiResponseCodeBook::INVALID_FORM_INPUTS['outcomeCode'],  $response_make_payment->error->message);
+            }
         
-            // curl_close($curl);
+            curl_close($curl);
 
-            // if (isset($response_make_payment->captured) && $response_make_payment->captured ==  true) {
+            if (isset($response_make_payment->captured) && $response_make_payment->captured ==  true) {
             
                 DB::begintransaction();
                 if(isset($request->booking_id) && $request->booking_id !== ''){
@@ -202,7 +202,7 @@ class PaymentService extends BaseService
                 }
                 $response_make_payment = '';
                 return Helper::returnRecord(GlobalApiResponseCodeBook::SUCCESS['outcomeCode'], $response_make_payment);
-            // }
+            }
 
         } catch (Exception $e) {
 
