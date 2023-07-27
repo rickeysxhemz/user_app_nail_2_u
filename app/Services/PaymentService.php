@@ -196,8 +196,8 @@ class PaymentService extends BaseService
                     $transaction->sender_id = Auth::id();
                     $transaction->payment_method_id = 3;
                     $transaction->transaction_status = 1;
+                    $transaction->user_posted_service_id  = $request->job_post_id;
                     $transaction->save();
-                    
                     DB::commit();
                 }
                 $response_make_payment = '';
