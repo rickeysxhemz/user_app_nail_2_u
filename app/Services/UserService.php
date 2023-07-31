@@ -14,6 +14,7 @@ use App\Libs\Response\GlobalApiResponseCodeBook;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Exception;
+use Carbon\Carbon;
 use App\Http\Traits\CommonTrait;
 
 class UserService extends BaseService
@@ -244,6 +245,7 @@ class UserService extends BaseService
                         $payment->artist_id = $transaction->receiver_id;
                         $payment->client_id = $transaction->sender_id;
                         $payment->booking_id = $transaction->booking_id;
+                        $payment->available_date =Carbon::now()->addDays(3);
                         $payment->transaction_id = $transaction->id;
                         $payment->amount = $booking->total_price;
                         $payment->status = 'pending';
