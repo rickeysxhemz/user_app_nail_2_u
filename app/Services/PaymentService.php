@@ -190,8 +190,10 @@ class PaymentService extends BaseService
 
                     DB::commit();
                 } else {
-                    // $user_post_services = UserPostedService::find($request->job_post_id);
-
+                    $user_post_services = UserPostedService::find($request->job_post_id);
+                    $user_post_services->status = 'active';
+                    $user_post_services->save();
+                    
                     $transaction = new Transaction();
                     $transaction->sender_id = Auth::id();
                     $transaction->payment_method_id = 3;
