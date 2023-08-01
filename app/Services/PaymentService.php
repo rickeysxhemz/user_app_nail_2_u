@@ -9,6 +9,7 @@ use App\Models\Booking;
 use App\Models\Transaction;
 use App\Models\SchedulerBooking;
 use App\Models\User;
+use App\Models\UserPostedService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Traits\CommonTrait;
@@ -193,7 +194,7 @@ class PaymentService extends BaseService
                     $user_post_services = UserPostedService::find($request->job_post_id);
                     $user_post_services->status = 'active';
                     $user_post_services->save();
-                    
+
                     $transaction = new Transaction();
                     $transaction->sender_id = Auth::id();
                     $transaction->payment_method_id = 3;
