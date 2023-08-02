@@ -89,7 +89,8 @@ class BookingService extends BaseService
     public function getAvailableArtistTime($request)
     {
         try {
-            $available_time = DB::table('schedulers')
+            if($request->has('artist_id')){
+                $available_time = DB::table('schedulers')
                 ->whereNotExists(function ($query) use ($request) {
                     $query->select(DB::raw(1))
                         ->from('scheduler_bookings')
@@ -100,6 +101,11 @@ class BookingService extends BaseService
                 })
                 ->select('id', 'time')
                 ->get();
+            } else {
+                $available_time = DB::table('schedulers')
+                ->select('id', 'time')
+                ->get();
+            }
 
             return Helper::returnRecord(GlobalApiResponseCodeBook::RECORDS_FOUND['outcomeCode'], $available_time);
         } catch (Exception $e) {
