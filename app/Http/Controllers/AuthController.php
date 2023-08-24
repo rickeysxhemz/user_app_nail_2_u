@@ -74,7 +74,12 @@ class AuthController extends Controller
 
     public function verifyPhone(VerifyPhoneRequest $request)
     {
-        return ($this->global_api_response->success(1, "phone number did not exist", 2));
+        $verify_phone = $this->auth_service->verifyPhone($request);
+
+        if (!$verify_phone)
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "phone did not exist", $verify_phone));
+
+        return ($this->global_api_response->success(1, $verify_phone, 0));
     }
 
     public function resetPassword(ResetPasswordRequest $request)

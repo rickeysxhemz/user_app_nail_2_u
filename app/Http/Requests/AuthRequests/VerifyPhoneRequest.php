@@ -24,7 +24,7 @@ class VerifyPhoneRequest extends BaseRequest
     public function rules()
     {
         return [
-            'phone_no' => 'bail|required|unique:users,phone_no',
+            'phone_no' => 'bail|required',
         ];
     }
 }
