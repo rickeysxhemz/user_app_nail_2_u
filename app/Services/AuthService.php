@@ -375,6 +375,33 @@ class AuthService extends BaseService
         }
     }
 
+    public function verifyPhone($request)
+    {
+        try {
+
+            $user = User::where('phone_no', $request->phone_no)->first();
+            
+            if($user && $user->phone_verified_at !== null){
+                $model_has_roles = DB::table('model_has_roles')
+                ->where('model_id', $user->id)->first();
+                
+                if($model_has_roles && $model_has_roles->role_id == '3') {
+                    return "The phone number has already been taken as artist";
+                } else {
+                    return "The phone number has already been taken";
+                }
+            } else {
+                return "";
+            }
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
+            Helper::errorLogs("AuthService: verifyPhone", $error);
+            return false;
+        }
+    }
+
     public function resetPassword($request)
     {
         try {
