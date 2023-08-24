@@ -417,6 +417,9 @@ class AuthService extends BaseService
                 if($model_has_roles && $model_has_roles->role_id == '3') {
                     return Helper::returnRecord(GlobalApiResponseCodeBook::RECORD_ALREADY_EXISTS['outcomeCode'], ['The email has already been taken as artist']);
                 } else {
+                    if($request->has('type') && isset($request->type)){
+                        return Helper::returnRecord(GlobalApiResponseCodeBook::SUCCESS['outcomeCode'], '');
+                    }
                     return Helper::returnRecord(GlobalApiResponseCodeBook::RECORD_ALREADY_EXISTS['outcomeCode'], ['The email has already been taken']);
                 }
             } else {
