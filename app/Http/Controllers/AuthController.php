@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequests\ForgotPasswordRequest;
 use App\Http\Requests\AuthRequests\VerifyCodeRequest;
+use App\Http\Requests\AuthRequests\VerifyPhoneRequest;
 use App\Http\Requests\AuthRequests\ResetPasswordRequest;
 use App\Http\Requests\AuthRequests\LoginRequest;
 use App\Http\Requests\AuthRequests\RegisterRequest;
@@ -69,6 +70,11 @@ class AuthController extends Controller
             return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "otp code not verified", $verify_code));
 
         return ($this->global_api_response->success(1, "code verify successfully!", $verify_code));
+    }
+
+    public function verifyPhone(VerifyPhoneRequest $request)
+    {
+        return ($this->global_api_response->success(1, "phone number did not exist", 2));
     }
 
     public function resetPassword(ResetPasswordRequest $request)
