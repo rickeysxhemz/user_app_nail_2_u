@@ -379,6 +379,8 @@ class AuthService extends BaseService
     {
         try {
 
+            $error = [];
+
             $user = User::where('phone_no', $request->phone_no)->first();
             
             if($user && $user->phone_verified_at !== null){
@@ -386,12 +388,12 @@ class AuthService extends BaseService
                 ->where('model_id', $user->id)->first();
                 
                 if($model_has_roles && $model_has_roles->role_id == '3') {
-                    return "The phone number has already been taken as artist";
+                    return Helper::returnRecord(GlobalApiResponseCodeBook::RECORD_ALREADY_EXISTS['outcomeCode'], ['The phone number has already been taken as artist']);
                 } else {
-                    return "The phone number has already been taken";
+                    return Helper::returnRecord(GlobalApiResponseCodeBook::RECORD_ALREADY_EXISTS['outcomeCode'], ['The phone number has already been taken']);
                 }
             } else {
-                return "";
+                return Helper::returnRecord(GlobalApiResponseCodeBook::SUCCESS['outcomeCode'], '');
             }
 
         } catch (Exception $e) {
@@ -413,12 +415,12 @@ class AuthService extends BaseService
                 ->where('model_id', $user->id)->first();
                 
                 if($model_has_roles && $model_has_roles->role_id == '3') {
-                    return "The email has already been taken as artist";
+                    return Helper::returnRecord(GlobalApiResponseCodeBook::RECORD_ALREADY_EXISTS['outcomeCode'], ['The email has already been taken as artist']);
                 } else {
-                    return "The email has already been taken";
+                    return Helper::returnRecord(GlobalApiResponseCodeBook::RECORD_ALREADY_EXISTS['outcomeCode'], ['The email has already been taken']);
                 }
             } else {
-                return "";
+                return Helper::returnRecord(GlobalApiResponseCodeBook::SUCCESS['outcomeCode'], '');
             }
 
         } catch (Exception $e) {
