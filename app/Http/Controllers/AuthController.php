@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AuthRequests\ForgotPasswordRequest;
 use App\Http\Requests\AuthRequests\VerifyCodeRequest;
 use App\Http\Requests\AuthRequests\VerifyPhoneRequest;
+use App\Http\Requests\AuthRequests\VerifyEmailRequest;
 use App\Http\Requests\AuthRequests\ResetPasswordRequest;
 use App\Http\Requests\AuthRequests\LoginRequest;
 use App\Http\Requests\AuthRequests\RegisterRequest;
@@ -78,6 +79,16 @@ class AuthController extends Controller
 
         if (!$verify_phone)
             return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "phone did not exist", $verify_phone));
+
+        return ($this->global_api_response->success(1, $verify_phone, 0));
+    }
+
+    public function emailExist(VerifyEmailRequest $request)
+    {
+        $verify_phone = $this->auth_service->emailExist($request);
+
+        if (!$verify_phone)
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "email did not exist", $verify_phone));
 
         return ($this->global_api_response->success(1, $verify_phone, 0));
     }

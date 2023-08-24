@@ -39,6 +39,7 @@ Route::prefix('auth')->group(function () {
     Route::post('verify-code', [AuthController::class, 'verifyCode']);
     Route::post('reset-password', [AuthController::class, 'resetPassword']);
     Route::post('verify-phone', [AuthController::class, 'verifyPhone']);
+    Route::post('verify-email', [AuthController::class, 'emailExist']);
 
     Route::group(['middleware' => ['auth:api', 'role:user']], function () {
         Route::get('logout', [AuthController::class, 'logout']);
