@@ -76,11 +76,14 @@ class AuthController extends Controller
     public function verifyPhone(VerifyPhoneRequest $request)
     {
         $verify_phone = $this->auth_service->verifyPhone($request);
-
+        
         if (!$verify_phone)
             return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "phone did not exist", $verify_phone));
 
-        return ($this->global_api_response->success(1, $verify_phone, 0));
+        if ($verify_phone['outcomeCode'] === GlobalApiResponseCodeBook::RECORD_ALREADY_EXISTS['outcomeCode'])
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::RECORD_ALREADY_EXISTS, "Record Already Exist!", $verify_phone['record']));
+        
+        return ($this->global_api_response->success(1, 'phone did not exist', ''));
     }
 
     public function emailExist(VerifyEmailRequest $request)
@@ -90,7 +93,10 @@ class AuthController extends Controller
         if (!$verify_phone)
             return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "email did not exist", $verify_phone));
 
-        return ($this->global_api_response->success(1, $verify_phone, 0));
+        if ($verify_phone['outcomeCode'] === GlobalApiResponseCodeBook::RECORD_ALREADY_EXISTS['outcomeCode'])
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::RECORD_ALREADY_EXISTS, "Record Already Exist!", $verify_phone['record']));
+        
+        return ($this->global_api_response->success(1, 'email did not exist', ''));
     }
 
     public function resetPassword(ResetPasswordRequest $request)
