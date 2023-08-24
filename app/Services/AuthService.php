@@ -402,6 +402,33 @@ class AuthService extends BaseService
         }
     }
 
+    public function emailExist($request)
+    {
+        try {
+
+            $user = User::where('email', $request->email)->first();
+            
+            if($user && $user->phone_verified_at !== null){
+                $model_has_roles = DB::table('model_has_roles')
+                ->where('model_id', $user->id)->first();
+                
+                if($model_has_roles && $model_has_roles->role_id == '3') {
+                    return "The email has already been taken as artist";
+                } else {
+                    return "The email has already been taken";
+                }
+            } else {
+                return "";
+            }
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
+            Helper::errorLogs("AuthService: emailExist", $error);
+            return false;
+        }
+    }
+
     public function resetPassword($request)
     {
         try {
