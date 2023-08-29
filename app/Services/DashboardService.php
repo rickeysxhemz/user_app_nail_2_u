@@ -35,7 +35,8 @@ class DashboardService extends BaseService
                           ->from('artist_services')
                           ->whereRaw('users.id = artist_services.artist_id');
                 })
-                ->orderby('id', 'desc')
+                ->withCount('jobs')
+                ->orderByRaw('jobs_count desc')
                 ->get(['id', 'username', 'image_url', 'cv_url', 'cover_image']);
            
             if ($artists) {
@@ -45,7 +46,7 @@ class DashboardService extends BaseService
                     $data['image_url'] = env('COMMON_PATH').$artist->image_url;
                     $data['cover_image'] =  env('COMMON_PATH').$artist->cover_image;
                     $data['ratings'] = round($artist->reviews->avg('rating'), 1);
-                    $data['jobs_done'] = count($artist->jobs);
+                    $data['jobs_done'] = $artist->jobs_count;
                     $status = 0;
                     $favourite_status = DB::table('favourite_artist')->where('artist_id', $artist->id)->where('user_id', Auth::id())->first();
                     if($favourite_status){
@@ -136,7 +137,8 @@ class DashboardService extends BaseService
                     $q->where("name", "artist");
                 })
                 ->whereNotNull('phone_verified_at')
-                ->orderby('id', 'desc')
+                ->withCount('jobs')
+                ->orderByRaw('jobs_count desc')
                 ->get(['id', 'username', 'image_url', 'cv_url', 'cover_image']);
             if ($suggested_artists) {
                 foreach ($suggested_artists as $artist) {
@@ -145,7 +147,7 @@ class DashboardService extends BaseService
                     $data['image_url'] = $artist->absolute_image_url;
                     $data['cover_image'] = $artist->cover_image;
                     $data['ratings'] = round($artist->reviews->avg('rating'), 1);
-                    $data['jobs_done'] = count($artist->jobs);
+                    $data['jobs_done'] = $artist->jobs_count;
                     $status = 0;
                     $favourite_status = DB::table('favourite_artist')->where('artist_id', $artist->id)->where('user_id', Auth::id())->first();
                     if($favourite_status){
