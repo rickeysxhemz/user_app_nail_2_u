@@ -360,6 +360,7 @@ class DashboardService extends BaseService
                             'PostService:id,name'
                         ])
                         ->where('user_id', Auth::id())
+                        ->where('status', 'active')
                         ->first();
             if(isset($booking->created_at) ){
                 if(isset($job_posts->created_at)) {
