@@ -23,4 +23,9 @@ class UserPostedService extends Model
     {
         return $this->belongsToMany(Service::class, 'post_services')->withPivot('service_id');
     }
+
+    public function Schedule()
+    {
+        return $this->belongsTo(Scheduler::class, 'time');
+    }
 }
