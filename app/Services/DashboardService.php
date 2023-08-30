@@ -357,7 +357,8 @@ class DashboardService extends BaseService
             $job_posts = UserPostedService::select('id','user_id', 'date', 'time', 'price', 'location', 'created_at')
                         ->with([
                             'Client:id,username,address,cv_url,image_url',
-                            'PostService:id,name'
+                            'PostService:id,name',
+                            'Schedule:id,name,time'
                         ])
                         ->where('user_id', Auth::id())
                         ->where('status', 'active')
