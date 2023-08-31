@@ -139,7 +139,7 @@ class UserService extends BaseService
     public function getPostYourService()
     {
         try {
-            $user_posted_service = UserPostedService::where('user_id', Auth::id())->whereIn('status', ['active', 'deactive', 'accepted'])->get();
+            $user_posted_service = UserPostedService::with(['Schedule:id,name,time'])->where('user_id', Auth::id())->whereIn('status', ['active', 'deactive', 'accepted'])->orderBy('id', 'desc')->get();
             return $user_posted_service;
         } catch (Exception $e) {
             $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
