@@ -356,7 +356,7 @@ class DashboardService extends BaseService
                 ->whereExists(function ($query) {
                     $query->select(DB::raw(1))
                         ->from('booking_locations')
-                        ->where('booking_locations.status', '=', 'start')
+                        ->whereIn('booking_locations.status',['start', 'reached', 'in-process'])
                         ->whereRaw('bookings.id = booking_locations.booking_id');
                 })
                 ->first();
