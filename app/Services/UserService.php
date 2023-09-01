@@ -9,6 +9,7 @@ use App\Models\UserPostedService;
 use App\Models\Booking;
 use App\Models\Transaction;
 use App\Models\Payment;
+use App\Models\BookingLocation;
 use Illuminate\Support\Facades\Auth;
 use App\Libs\Response\GlobalApiResponseCodeBook;
 use Illuminate\Support\Facades\DB;
@@ -200,6 +201,12 @@ class UserService extends BaseService
             if ($booking) {
                 $booking->status = 'in-process';
                 $booking->save();
+
+                $booking_locations = BookingLocation::where('booking_id', $id)->first();
+                if($booking_locations){
+                    $booking_locations->status = 'in-process';
+                    $booking_locations->save();
+                }
                 
                 $artist_name = User::find($booking->artist_id);
                 $user = 'user';
@@ -235,6 +242,12 @@ class UserService extends BaseService
                 $booking->status = 'done';
                 $booking->save();
 
+                $booking_locations = BookingLocation::where('booking_id', $id)->first();
+                if($booking_locations){
+                    $booking_locations->status = 'completed';
+                    $booking_locations->save();
+                }
+                
                 $transaction = Transaction::where('booking_id', $id)->first();
                 
                 if($transaction){
