@@ -342,6 +342,7 @@ class DashboardService extends BaseService
     {
         
         try {
+
             $booking = Booking::select('id', 'artist_id', 'client_id', 'started_at', 'total_price', 'created_at', 'status')
                 ->with([
                     'BookingService:id,name',
@@ -351,7 +352,28 @@ class DashboardService extends BaseService
                     'BookingLocation'
                 ])
                 ->where('client_id', Auth::id())
-                ->where('status', 'new')
+                ->whereIn('status', ['new', 'in-process'])
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('booking_locations')
+                        ->where('booking_locations.status', '=', 'start')
+                        ->whereRaw('bookings.id = booking_locations.booking_id');
+                })
+                ->first();
+            
+            if($booking) {
+                return $booking;
+            }
+            $booking = Booking::select('id', 'artist_id', 'client_id', 'started_at', 'total_price', 'created_at', 'status')
+                ->with([
+                    'BookingService:id,name',
+                    'Artist:id,username,image_url,cv_url,cover_image',
+                    'Client:id,address,cv_url,image_url',
+                    'Schedule:id,time',
+                    'BookingLocation'
+                ])
+                ->where('client_id', Auth::id())
+                ->whereIn('status', ['new', 'in-process'])
                 ->first();
             
             $job_posts = UserPostedService::select('id','user_id', 'date', 'time', 'price', 'location', 'created_at')
