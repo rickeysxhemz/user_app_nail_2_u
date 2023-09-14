@@ -40,7 +40,7 @@ Route::prefix('auth')->group(function () {
     Route::post('reset-password', [AuthController::class, 'resetPassword']);
     Route::post('verify-phone', [AuthController::class, 'verifyPhone']);
     Route::post('verify-email', [AuthController::class, 'emailExist']);
-
+    Route::post('social-login', [AuthController::class, 'socialLogin']);
     Route::group(['middleware' => ['auth:api', 'role:user']], function () {
         Route::get('logout', [AuthController::class, 'logout']);
     });
