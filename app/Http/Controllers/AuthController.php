@@ -13,6 +13,7 @@ use App\Libs\Response\GlobalApiResponse;
 use App\Libs\Response\GlobalApiResponseCodeBook;
 use Laravel\Socialite\Facades\Socialite;
 use App\Services\AuthService;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -37,6 +38,21 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $login = $this->auth_service->login($request);
+
+        if (!$login)
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "Login not successful!", []));
+
+        if ($login['outcomeCode'] === GlobalApiResponseCodeBook::INVALID_CREDENTIALS['outcomeCode'])
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::INVALID_CREDENTIALS, "Your email or password is invalid!", []));
+
+        if ($login['outcomeCode'] === GlobalApiResponseCodeBook::EMAIL_NOT_VERIFIED['outcomeCode'])
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::EMAIL_NOT_VERIFIED, "Your email is not verified!", $login['record']));
+        
+        return ($this->global_api_response->success(1, "Login successfully!", $login['record']));
+    }
+    public function socialLogin(Request $request)
+    {
+        $login = $this->auth_service->socialLogin($request);
 
         if (!$login)
             return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "Login not successful!", []));

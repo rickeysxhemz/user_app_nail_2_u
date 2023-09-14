@@ -223,6 +223,41 @@ class AuthService extends BaseService
             return false;
         }
     }
+    public function socialLogin($request)
+    {
+        try {
+            $user = User::where('email',$request->email)
+            ->where('social_login_token',$request->token)
+            ->first();
+            if (!$user) {
+                $user = new User();
+                $user->username = $request->name;
+                $user->email = $request->email;
+                $user->password = Hash::make(Str::random(8));
+                $user->social_login_token= $request->token;
+                $user->zipcode= '97836';
+                $user->cv_url= null;
+                $user->save();
+            }
+            $token = $this->guard()->login($user);
+            $roles = Auth::user()->roles->pluck('name');
+            $data = Auth::user()->toArray();
+            unset($data['roles']);
+            $data = [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => $this->guard()->factory()->getTTL() * 60,
+                'user' => Auth::user()->only('id', 'username', 'email'),
+                'roles' => $roles,
+                // 'settings' => Auth::user()->setting->only('user_id', 'private_account', 'secure_payment', 'sync_contact_no', 'app_notification', 'language')
+            ];
+            return Helper::returnRecord(GlobalApiResponseCodeBook::SUCCESS['outcomeCode'], $data);
+        } catch (Exception $e) {
+            $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
+            Helper::errorLogs("AuthService: socialLogin", $error);
+            return false;
+        }
+    }
 
     public function forgotPassword($request)
     {
