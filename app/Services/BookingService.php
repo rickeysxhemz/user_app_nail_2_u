@@ -90,17 +90,35 @@ class BookingService extends BaseService
     {
         try {
             if($request->has('artist_id')){
-                $available_time = DB::table('schedulers')
-                ->whereNotExists(function ($query) use ($request) {
-                    $query->select(DB::raw(1))
-                        ->from('scheduler_bookings')
-                        ->where('scheduler_bookings.user_id', '=', $request->artist_id)
-                        ->where('scheduler_bookings.date', $request->date)
-                        ->where('scheduler_bookings.status', 'book')
-                        ->whereRaw('schedulers.id = scheduler_bookings.scheduler_id');
-                })
+                $all_times = [];
+                $available = DB::table('schedulers')
+                // ->whereNotExists(function ($query) use ($request) {
+                //     $query->select(DB::raw(1))
+                //         ->from('scheduler_bookings')
+                //         ->where('scheduler_bookings.user_id', '=', $request->artist_id)
+                //         ->where('scheduler_bookings.date', $request->date)
+                //         ->where('scheduler_bookings.status', 'book')
+                //         ->whereRaw('schedulers.id = scheduler_bookings.scheduler_id');
+                // })
                 ->select('id', 'time')
                 ->get();
+
+                foreach ($available as $time) {
+                    $data['id'] = $time->id;
+                    $data['time'] = $time->time;
+                    $scheduler_bookings = SchedulerBooking::where('user_id', $request->artist_id)
+                                                            ->where('date', $request->date)
+                                                            ->where('scheduler_id', $time->id)
+                                                            ->first();
+                    if($scheduler_bookings){
+                        $data['status'] = 'booked';
+                    } else {
+                        $data['status'] = 'unbooked';
+                    }                                        
+                    array_push($all_times, $data);
+                };
+                $available_time = $all_times;
+
             } else {
                 $available_time = DB::table('schedulers')
                 ->select('id', 'time')
