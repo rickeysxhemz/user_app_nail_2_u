@@ -37,6 +37,7 @@ class DashboardService extends BaseService
                 })
                 ->withCount('jobs')
                 ->orderByRaw('jobs_count desc')
+                ->orderby('id', 'desc')
                 ->get(['id', 'username', 'image_url', 'cv_url', 'cover_image']);
            
             if ($artists) {
@@ -54,7 +55,13 @@ class DashboardService extends BaseService
                     }
                     $data['favourite'] = $status;
                     $data['expert'] = '';
-                    $data['service_price'] = DB::table('artist_services')->where('artist_id', $artist->id)->sum('price');
+                    $lowest_service_price = DB::table('artist_services')->where('artist_id', $artist->id)->where('approve', '1')->orderBy('price')->first();
+                    if($lowest_service_price){
+                        $data['service_price'] = $lowest_service_price->price;
+                    } else{
+                        $data['service_price'] = 0;
+                    }
+                    // $data['service_price'] = DB::table('artist_services')->where('artist_id', $artist->id)->sum('price');
                     
                     array_push($artist_data, $data);
                 }
@@ -144,6 +151,7 @@ class DashboardService extends BaseService
                 })
                 ->withCount('jobs')
                 ->orderByRaw('jobs_count desc')
+                ->orderby('id', 'desc')
                 ->get(['id', 'username', 'image_url', 'cv_url', 'cover_image']);
            
             if ($artists) {
@@ -161,7 +169,13 @@ class DashboardService extends BaseService
                     }
                     $data['favourite'] = $status;
                     $data['expert'] = '';
-                    $data['service_price'] = DB::table('artist_services')->where('artist_id', $artist->id)->sum('price');
+                    $lowest_service_price = DB::table('artist_services')->where('artist_id', $artist->id)->where('approve', '1')->orderBy('price')->first();
+                    if($lowest_service_price){
+                        $data['service_price'] = $lowest_service_price->price;
+                    } else{
+                        $data['service_price'] = 0;
+                    }
+                    // $data['service_price'] = DB::table('artist_services')->where('artist_id', $artist->id)->sum('price');
                     
                     array_push($artist_data, $data);
                 }
