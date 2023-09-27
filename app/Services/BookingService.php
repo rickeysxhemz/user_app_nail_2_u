@@ -13,6 +13,7 @@ use App\Helper\Helper;
 use Illuminate\Support\Facades\Auth;
 use App\Libs\Response\GlobalApiResponseCodeBook;
 use Illuminate\Support\Facades\DB;
+use App\Models\Transaction;
 
 class BookingService extends BaseService
 {
@@ -198,6 +199,35 @@ class BookingService extends BaseService
             }
              
             return Helper::returnRecord(GlobalApiResponseCodeBook::RECORD_NOT_EXISTS['outcomeCode'], $services_ids_not_found);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
+            Helper::errorLogs("BookingService: getJobHistory", $error);
+            return Helper::returnRecord(false, []);
+        }
+    }
+    public function cancelBooking($id)
+    {
+        try {
+            DB::beginTransaction();
+            $booking = Booking::where('id', $id)->first();
+            $booking->status = 'cancel';
+            $booking->save();
+
+            $scheduler_booking = SchedulerBooking::where('booking_id', $id)->first();
+            $scheduler_booking->status = 'cancel';
+            $scheduler_booking->save();
+
+            
+            $booking_location = BookingLocation::where('booking_id', $id)->first();
+            $booking_location->status = 'standby';
+            $booking_location->save();
+
+            $transaction=Transaction::where('booking_id', $id)->first();
+            $transaction->transaction_status = 2;
+            $transaction->save();
+            DB::commit();
+            return Helper::returnRecord(GlobalApiResponseCodeBook::RECORD_CREATED['outcomeCode'], ['booking_id' => $booking->id]);
         } catch (Exception $e) {
             DB::rollBack();
             $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();

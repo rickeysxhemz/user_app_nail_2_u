@@ -89,6 +89,7 @@ Route::group(['middleware' => ['auth:api', 'role:user', 'check-user-status']], f
         Route::post('get-available-artist-time', [BookingController::class, 'getAvailableArtistTime']);
         Route::get('all', [BookingController::class, 'all']);
         Route::post('detail', [BookingController::class, 'bookingDetail']);
+        Route::put('cancel/{id}', [BookingController::class, 'cancelBooking']);
     });
 
     Route::prefix('contact')->group(function () {
