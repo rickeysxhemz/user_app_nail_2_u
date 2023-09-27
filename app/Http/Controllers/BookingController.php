@@ -63,4 +63,13 @@ class BookingController extends Controller
 
         return ($this->global_api_response->success(count($available_time), "Artist available details fetched successfully!", $available_time['record']));
     }
+    public function cancelBooking($id)
+    {
+        $cancel_booking = $this->booking_service->cancelBooking($id);
+
+        if (!$cancel_booking['outcomeCode'])
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "Booking cancel failed!", $cancel_booking['record']));
+
+        return ($this->global_api_response->success(count($cancel_booking), "Booking cancel successfully!", $cancel_booking['record']));
+    }
 }
