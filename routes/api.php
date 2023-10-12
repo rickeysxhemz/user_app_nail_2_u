@@ -90,6 +90,8 @@ Route::group(['middleware' => ['auth:api', 'role:user', 'check-user-status']], f
         Route::get('all', [BookingController::class, 'all']);
         Route::post('detail', [BookingController::class, 'bookingDetail']);
         Route::put('cancel/{id}', [BookingController::class, 'cancelBooking']);
+        Route::post('get-available-slots', [BookingController::class, 'getAvailableSlots']);
+        Route::post('update-schedular', [BookingController::class, 'updateSchedular']);
     });
 
     Route::prefix('contact')->group(function () {
