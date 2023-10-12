@@ -72,4 +72,22 @@ class BookingController extends Controller
 
         return ($this->global_api_response->success(count($cancel_booking), "Booking cancel successfully!", $cancel_booking['record']));
     }
+   public function getAvailableSlots(Request $request)
+   {
+        $available_slots = $this->booking_service->getAvailableSlots($request);
+
+        if (!$available_slots['outcomeCode'])
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "Artist available slots details did not fetched!", $available_slots['record']));
+
+        return ($this->global_api_response->success(count($available_slots), "Artist available slots details fetched successfully!", $available_slots['record']));
+   }
+   public function updateSchedular(Request $request)
+   {
+        $update_schedular = $this->booking_service->updateSchedular($request);
+
+        if (!$update_schedular['outcomeCode'])
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "Schedular update failed!", $update_schedular['record']));
+
+        return ($this->global_api_response->success(count($update_schedular), "Schedular update successfully!", $update_schedular['record']));
+   }
 }

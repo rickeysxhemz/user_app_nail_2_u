@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Libs\Response\GlobalApiResponseCodeBook;
 use Illuminate\Support\Facades\DB;
 use App\Models\Transaction;
+use App\Http\Traits\CommonTrait;
 
 class BookingService extends BaseService
 {
+    use CommonTrait;
     public function all($request)
     {
         try {
@@ -227,11 +229,58 @@ class BookingService extends BaseService
             $transaction->transaction_status = 2;
             $transaction->save();
             DB::commit();
+
+            $artist="artist";
+            $bookingCancel="Booking Cancel !";
+            $body="Booking Cancelled Successfully.At Nails2U, your convenience , our top priority";
+            $booking_cancel="1";
+            $this->notifications($booking->artist_id, $bookingCancel, $body, $booking_cancel, $artist);
+
             return Helper::returnRecord(GlobalApiResponseCodeBook::RECORD_CREATED['outcomeCode'], ['booking_id' => $booking->id]);
         } catch (Exception $e) {
             DB::rollBack();
             $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
             Helper::errorLogs("BookingService: getJobHistory", $error);
+            return Helper::returnRecord(false, []);
+        }
+    }
+    public function getAvailableSlots($request)
+    {
+        try {
+            $available_slots=[];
+            $booking_id=$request->booking_id;
+             $available_time =Scheduler::whereNotIn('id', function($query) use ($request) {
+                $query->select('scheduler_id')
+                    ->from('scheduler_bookings')
+                    ->where('user_id', $request->artist_id)
+                    ->where('date', $request->date)
+                    ->whereIn('status', ['book']);
+            })->get();
+            $available_slots['booking_id']=$booking_id;
+            $available_slots['available_time']=$available_time;
+
+            return Helper::returnRecord(GlobalApiResponseCodeBook::RECORDS_FOUND['outcomeCode'], $available_slots);
+        } catch (Exception $e) {
+            $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
+            Helper::errorLogs("BookingService: getAvailableArtistTime", $error);
+            return Helper::returnRecord(false, []);
+        }
+    }
+    public function updateSchedular($request)
+    {
+        try {
+            $scheduler_booking = SchedulerBooking::where('booking_id',$request->booking_id)->first();
+            $scheduler_booking->scheduler_id = $request->schedule_time_id;
+            $scheduler_booking->save();
+
+            $booking = Booking::where('id', $request->booking_id)->first();
+            $booking->started_at = $request->schedule_time_id;
+            $booking->save();
+
+            return Helper::returnRecord(GlobalApiResponseCodeBook::RECORDS_FOUND['outcomeCode'], $scheduler_booking);
+        } catch (Exception $e) {
+            $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
+            Helper::errorLogs("BookingService: getAvailableArtistTime", $error);
             return Helper::returnRecord(false, []);
         }
     }
