@@ -54,4 +54,13 @@ class PaymentController extends Controller
             return ($this->global_api_response->success(1, "Payment send successfully!", ['status' => '1'], $send_Payments));
         }
     }
+    public function paymentIssues(Request $request)
+    {
+        $payment_issues = $this->payment_service->paymentIssues($request);
+
+        if (!$payment_issues)
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "Payment issues did not submitted!", $payment_issues));
+
+        return ($this->global_api_response->success(count($payment_issues), "Payment issues submitted successfully!", $payment_issues));
+    }
 }

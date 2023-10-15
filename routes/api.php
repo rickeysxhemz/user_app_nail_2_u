@@ -82,6 +82,7 @@ Route::group(['middleware' => ['auth:api', 'role:user', 'check-user-status']], f
     Route::prefix('payments')->group(function () {
         Route::get('get-details', [PaymentController::class, 'getDetails']);
         Route::post('send', [PaymentController::class, 'sendPayments']);
+        Route::post('issue', [PaymentController::class, 'paymentIssues']);
     });
 
     Route::prefix('booking')->group(function () {

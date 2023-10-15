@@ -13,6 +13,7 @@ use App\Models\UserPostedService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Traits\CommonTrait;
+use App\Models\PaymentIssue;
 
 class PaymentService extends BaseService
 {
@@ -211,6 +212,32 @@ class PaymentService extends BaseService
 
             $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
             Helper::errorLogs("PaymentService: getTotalEarning", $error);
+            return false;
+        }
+    }
+    public function paymentIssues($request)
+    {
+        try {
+            DB::begintransaction();
+            $payment_issues = new PaymentIssue;
+            $payment_issues->user_id = Auth::id();
+            $payment_issues->booking_id = $request->booking_id;
+            $payment_issues->issue = $request->issue;
+            $payment_issues->status= 'pending';
+            $payment_issues->save();
+            DB::commit();
+
+            $user="user";
+            $paymentIssue="Payment Issue Submitted";
+            $body="We'have receive your issue and now under observation .Thanks";
+            $payment_issue="1";
+            $this->notifications(Auth::id(), $paymentIssue, $body, $payment_issue, $user);
+            return Helper::returnRecord(GlobalApiResponseCodeBook::SUCCESS['outcomeCode'], $payment_issues);
+
+        } catch (Exception $e) {
+            DB::rollback();
+            $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
+            Helper::errorLogs("PaymentService: paymentIssues", $error);
             return false;
         }
     }
