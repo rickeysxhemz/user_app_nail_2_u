@@ -408,7 +408,7 @@ class DashboardService extends BaseService
         
         try {
 
-            $booking = Booking::select('id', 'artist_id', 'client_id', 'started_at', 'total_price', 'created_at', 'status')
+            $booking = Booking::select('id', 'artist_id', 'client_id', 'started_at', 'ended_at', 'total_price', 'created_at', 'status')
                 ->with([
                     'BookingService:id,name',
                     'Artist:id,username,image_url,cv_url,cover_image',
