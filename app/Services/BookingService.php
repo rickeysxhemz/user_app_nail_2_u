@@ -271,6 +271,7 @@ class BookingService extends BaseService
         try {
             $scheduler_booking = SchedulerBooking::where('booking_id',$request->booking_id)->first();
             $scheduler_booking->scheduler_id = $request->schedule_time_id;
+            $scheduler_booking->date = $request->date;
             $scheduler_booking->save();
 
             $booking = Booking::where('id', $request->booking_id)->first();
