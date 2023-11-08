@@ -32,6 +32,10 @@ class BookingService extends BaseService
                                     ->where('client_id', Auth::id())
                                     ->where('status', 'done')
                                     ->get();
+            $bookings['cancel'] = Booking::with(['BookingService', 'SchedulerBooking'])
+                                    ->where('client_id', Auth::id())
+                                    ->where('status', 'cancel')
+                                    ->get();
             $bookings['favourites'] = Auth::user()->FavouriteArtist;
 
             return Helper::returnRecord(GlobalApiResponseCodeBook::RECORDS_FOUND['outcomeCode'], $bookings);
