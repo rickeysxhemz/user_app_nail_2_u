@@ -276,6 +276,7 @@ class BookingService extends BaseService
 
             $booking = Booking::where('id', $request->booking_id)->first();
             $booking->started_at = $request->schedule_time_id;
+            $booking->ended_at = $request->date;
             $booking->save();
 
             return Helper::returnRecord(GlobalApiResponseCodeBook::RECORDS_FOUND['outcomeCode'], $scheduler_booking);
