@@ -12,6 +12,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\FavouriteController;
+use App\Http\Controllers\CardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -125,6 +126,11 @@ Route::group(['middleware' => ['auth:api', 'role:user', 'check-user-status']], f
         Route::get('all', [FavouriteController::class, 'all']);
         Route::post('send', [FavouriteController::class, 'create']);
         Route::post('delete', [FavouriteController::class, 'deleteFavourite']);
+    });
+
+    Route::prefix('card')->group(function () {
+        Route::post('add', [CardController::class, 'create']);
+        Route::get('all', [CardController::class, 'all']);
     });
 });
 
