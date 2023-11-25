@@ -20,7 +20,8 @@ class CardService extends BaseService
             $card->user_id = Auth::id();
             $card->card_name = $request->card_name;
             $card->card_number = $request->card_number;
-            $card->exp_date = $request->exp_date;
+            $card->exp_month = $request->exp_month;
+            $card->exp_year = $request->exp_year;
             $card->cvv = $request->cvv;
             $card->save();
 

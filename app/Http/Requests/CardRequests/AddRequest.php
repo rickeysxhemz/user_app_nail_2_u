@@ -26,7 +26,8 @@ class AddRequest extends BaseRequest
         return [
             'card_number' => ['required', 'unique:cards,card_number'],
             'card_name' => ['required'],
-            'exp_date' => ['required'],
+            'exp_month' => ['required'],
+            'exp_year' => ['required'],
             'cvv' => ['required']
         ];
     }
