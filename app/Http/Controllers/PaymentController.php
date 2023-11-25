@@ -45,8 +45,12 @@ class PaymentController extends Controller
         if (!$send_Payments)
             return ($this->global_api_response->error(GlobalApiResponseCodeBook::INTERNAL_SERVER_ERROR, "Payment did not send!", $send_Payments));
         
+        if ($send_Payments === GlobalApiResponseCodeBook::RECORD_NOT_EXISTS['outcomeCode'])
+            return ($this->global_api_response->error(GlobalApiResponseCodeBook::RECORD_NOT_EXISTS, "Card id not found!", $send_Payments));
+        
         if ($send_Payments['outcomeCode'] === GlobalApiResponseCodeBook::INVALID_FORM_INPUTS['outcomeCode'])
             return ($this->global_api_response->error(GlobalApiResponseCodeBook::INVALID_FORM_INPUTS, 'invalid card', $send_Payments));
+
 
         if(isset($request->booking_id)){
             return ($this->global_api_response->success(1, "Payment send successfully!", ['status' => '0'], $send_Payments));
