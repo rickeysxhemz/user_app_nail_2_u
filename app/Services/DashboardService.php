@@ -22,9 +22,8 @@ class DashboardService extends BaseService
                 'reviews',
                 'jobs' => function ($q) {
                     $q->where("status", "done");
-                }    
-                // },
-                // 'services'
+                },
+                'ArtistCategory'
             ])
                 ->whereHas("roles", function ($q) {
                     $q->where("name", "artist");
@@ -61,7 +60,8 @@ class DashboardService extends BaseService
                     } else{
                         $data['service_price'] = 0;
                     }
-                    // $data['service_price'] = DB::table('artist_services')->where('artist_id', $artist->id)->sum('price');
+
+                    $data['artist_category'] = $artist->ArtistCategory;
                     
                     array_push($artist_data, $data);
                 }
@@ -87,8 +87,7 @@ class DashboardService extends BaseService
                 'jobs' => function ($q) {
                     $q->where("status", "done");
                 }    
-                // },
-                // 'services'
+                
             ])
                 ->whereHas("roles", function ($q) {
                     $q->where("name", "artist");
@@ -97,7 +96,7 @@ class DashboardService extends BaseService
                 ->where('id', $id)
                 ->orderby('id', 'desc')
                 ->get(['id', 'username', 'image_url', 'cv_url', 'cover_image', 'created_at']);
-                // return $suggested_artists;
+                
             if ($suggested_artists) {
                 foreach ($suggested_artists as $artist) {
                     $profile = explode(env('USER_APP_PATH'),$artist->absolute_image_url);
@@ -136,9 +135,9 @@ class DashboardService extends BaseService
                 'reviews',
                 'jobs' => function ($q) {
                     $q->where("status", "done");
-                }    
-                // },
-                // 'services'
+                },
+                'ArtistCategory'    
+                
             ])
                 ->whereHas("roles", function ($q) {
                     $q->where("name", "salon");
@@ -175,7 +174,8 @@ class DashboardService extends BaseService
                     } else{
                         $data['service_price'] = 0;
                     }
-                    // $data['service_price'] = DB::table('artist_services')->where('artist_id', $artist->id)->sum('price');
+
+                    $data['artist_category'] = $artist->ArtistCategory;
                     
                     array_push($artist_data, $data);
                 }
@@ -187,67 +187,6 @@ class DashboardService extends BaseService
             Helper::errorLogs("DashboardService: getAllArtists", $error);
             return false;
         }
-        // try {
-        //     $data = [];
-        //     $artist_data = [];
-        //     $suggested_artists = User::with([
-        //         'reviews',
-        //         'jobs' => function ($q) {
-        //             $q->where("status", "done");
-        //         }    
-        //         // },
-        //         // 'services'
-        //     ])
-        //         ->whereHas("roles", function ($q) {
-        //             $q->where("name", "artist");
-        //         })
-        //         ->whereNotNull('phone_verified_at')
-        //         ->withCount('jobs')
-        //         ->orderByRaw('jobs_count desc')
-        //         ->get(['id', 'username', 'image_url', 'cv_url', 'cover_image']);
-        //     if ($suggested_artists) {
-        //         foreach ($suggested_artists as $artist) {
-        //             $data['id'] = $artist->id;
-        //             $data['username'] = $artist->username;
-        //             $data['image_url'] = $artist->absolute_image_url;
-        //             $data['cover_image'] = $artist->cover_image;
-        //             $data['ratings'] = round($artist->reviews->avg('rating'), 1);
-        //             $data['jobs_done'] = $artist->jobs_count;
-        //             $status = 0;
-        //             $favourite_status = DB::table('favourite_artist')->where('artist_id', $artist->id)->where('user_id', Auth::id())->first();
-        //             if($favourite_status){
-        //                 $status = 1;
-        //             }
-        //             $data['favourite'] = $status;
-        //             $data['expert'] = '';
-        //             $data['service_price'] = DB::table('artist_services')->where('artist_id', $artist->id)->sum('price');
-        //             // $artist_services = $artist->services->pluck('id')->toArray();
-
-        //             // if (count($artist_services) > 0) {
-        //             //     for ($i = 0; $i < count($artist->services->toArray()); $i++) {
-        //             //         $verify = [];
-        //             //         $count = DB::table('booking_services')->where('service_id', $artist_services[$i])->count();
-        //             //         $verify[$artist_services[$i]] = $count;
-        //             //         $maxs = array_keys($verify, max($verify));
-        //             //     }
-
-        //             //     $service = Service::find($maxs[0]);
-        //             //     $data['expert'] = $service->name;
-        //             //     $data['service_price'] = $service->price;
-        //             // }
-        //             array_push($artist_data, $data);
-
-        //             $artist_data = collect($artist_data)->sortBy('jobs_done')->reverse()->toArray();
-        //             $artist_data = array_slice($artist_data, 0, 15);
-        //         }
-        //         return $artist_data;
-        //     }
-        //     return GlobalApiResponseCodeBook::RECORD_NOT_EXISTS['outcomeCode'];
-        // } catch (Exception $e) {
-        //     $error = "Error: Message: " . $e->getMessage() . " File: " . $e->getFile() . " Line #: " . $e->getLine();
-        //     Helper::errorLogs("DashboardService: getSuggestedArtists", $error);
-        //     return false;
-        // }
     }
 
     public function getNewArtists()
