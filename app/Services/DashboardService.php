@@ -82,6 +82,7 @@ class DashboardService extends BaseService
             $artist_data = [];
             $suggested_artists = User::with([
                 'reviews',
+                'ArtistCategory',
                 'ArtistService',
                 'portfolio',
                 'jobs' => function ($q) {
@@ -107,6 +108,7 @@ class DashboardService extends BaseService
                     $data['ratings'] = round($artist->reviews->avg('rating'), 1);
                     $data['jobs_done'] = count($artist->jobs);
                     $data['since_join'] = date("Y", strtotime($artist->created_at));
+                    $data['category'] = $artist->ArtistCategory;
                     $data['service'] = $artist->ArtistService;
                     $data['expert'] = '';
                     $data['service_price'] = DB::table('artist_services')->where('artist_id', $artist->id)->sum('price');
