@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helper\Helper;
 use App\Libs\Response\GlobalApiResponseCodeBook;
 use App\Models\Service;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 
 class ServicesService extends BaseService
@@ -12,10 +13,13 @@ class ServicesService extends BaseService
     public function all()
     {
         try {
-            // $services_all = Service::where('artist_id', Auth::id())->orderBy('created_at', 'desc')->paginate(10
-            $services_all = Service::orderBy('created_at', 'desc')->get();
+            $services_all = [];
+            
+            $services_all['category'] = Category::all();
+            $services_all['service'] = Service::where('status', 'admin')->orderBy('created_at', 'desc')->get();
 
-            return Helper::returnRecord(GlobalApiResponseCodeBook::RECORD_CREATED['outcomeCode'], $services_all->toArray());
+
+            return Helper::returnRecord(GlobalApiResponseCodeBook::RECORD_CREATED['outcomeCode'], $services_all);
 
         } catch (\Exception $e) {
 
