@@ -32,6 +32,10 @@ class BookingService extends BaseService
                                     ->where('client_id', Auth::id())
                                     ->where('status', 'done')
                                     ->get();
+            $bookings['cancel'] = Booking::with(['BookingService', 'SchedulerBooking'])
+                                    ->where('client_id', Auth::id())
+                                    ->where('status', 'cancel')
+                                    ->get();
             $bookings['favourites'] = Auth::user()->FavouriteArtist;
 
             return Helper::returnRecord(GlobalApiResponseCodeBook::RECORDS_FOUND['outcomeCode'], $bookings);
@@ -276,6 +280,13 @@ class BookingService extends BaseService
 
             $booking = Booking::where('id', $request->booking_id)->first();
             $booking->started_at = $request->schedule_time_id;
+
+            $scheduler_time = Scheduler::where('id', $request->schedule_time_id)->first();
+            $date_array = explode("-", $request->date);
+            $end_date_converted = $date_array[2].'-'.$date_array[0].'-'.$date_array[1];
+            $scheduler_time = explode(" ", $scheduler_time->time);
+            $end_date = $end_date_converted . ' ' . $scheduler_time[0];
+            $booking->ended_at = $end_date;
             $booking->save();
 
             return Helper::returnRecord(GlobalApiResponseCodeBook::RECORDS_FOUND['outcomeCode'], $scheduler_booking);

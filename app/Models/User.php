@@ -117,4 +117,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(Service::class, 'deal_services')->withPivot('service_id', 'deal_id');
     }
+    public function ArtistCategory()
+    {
+        return $this->belongsToMany(Category::class, 'artist_categories')->withPivot('category_id');
+    }
 }
